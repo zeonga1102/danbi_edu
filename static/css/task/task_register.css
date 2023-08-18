@@ -1,0 +1,30 @@
+.container {
+    background-color: rgb(243, 243, 243);
+    max-width: 600px;
+    margin: 30px auto 0 auto;
+    padding: 100px 50px;
+    border-radius: 30px;
+}
+
+.btn {
+    display: block;
+    margin: 0 auto;
+}
+
+.subtask {
+    margin: 10px 0 40px 0;
+}
+
+.team-select {
+    display: flex;
+    margin-bottom: 5px;
+    align-items: center;
+}
+
+.team-delete {
+    margin-left: 10px;
+}
+
+.team-delete:hover {
+    color: red;
+}
