@@ -9,7 +9,7 @@ class Task(models.Model):
     title = models.CharField(max_length=50)
     content = models.TextField()
     is_complete = models.BooleanField(default=False)
-    complete_date = models.DateTimeField()
+    complete_date = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
@@ -17,7 +17,7 @@ class Task(models.Model):
 class SubTask(models.Model):
     team = models.CharField(max_length=10, choices=team_choices)
     is_complete = models.BooleanField(default=False)
-    completed_date = models.DateTimeField()
+    completed_date = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     task = models.ForeignKey("task.Task", on_delete=models.CASCADE)
