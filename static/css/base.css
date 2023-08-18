@@ -1,0 +1,23 @@
+a {
+    text-decoration-line: none;
+    color: black;
+    font-weight: 700;
+}
+
+a:hover {
+    color: rgb(160, 160, 160);
+}
+
+.wrap {
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+}
+
+.button-logout {
+    background-color: rgb(209, 21, 21);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 700;
+}
