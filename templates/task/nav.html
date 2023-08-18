@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block statics %}
+    <link href={% static "css/task/nav.css" %} rel="stylesheet">
+    <script src={% static "js/task/nav.js" %}></script>
+    {% block task_statics %}
+    {% endblock %}
+{% endblock %}
+
+{% block content %}
+    <nav class="top">
+        <a href={% url "task:task_list" %}>전체 업무</a>
+        <a href={% url "task:task_list" %}>할당 업무</a>
+        <a href={% url "task:task_list" %}>내가 등록한 업무</a>
+        <button onclick="go_task_register()" class="button-task-register">업무 등록</button>
+        <button onclick="logout()" class="button-logout">로그아웃</button>
+    </nav>
+    {% block task_content %}
+    {% endblock %}
+{% endblock %}

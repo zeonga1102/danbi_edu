@@ -1,0 +1,21 @@
+.top {
+    background-color: rgb(255, 182, 193);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: 150px;
+}
+
+.top > a {
+    margin-right: 20px;
+}
+
+.button-task-register {
+    background-color: rgb(55, 204, 241);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 700;
+    margin-right: 20px;
+}
