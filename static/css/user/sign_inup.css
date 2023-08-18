@@ -24,3 +24,9 @@
 .a-sign-inup:hover {
     color: rgb(255, 181, 181);
 }
+
+
+.team {
+    display: flex;
+    margin-bottom: 10px;
+}

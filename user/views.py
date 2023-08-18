@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from user.serializers import UserSerializer
+from danbi_edu.const import team_choices
 
 
 class LogInView(APIView):
@@ -29,6 +30,23 @@ class LogInView(APIView):
     def delete(self, request):
         logout(request)
         return Response(status=status.HTTP_200_OK)
+    
+    
+class SignUpView(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = "user/sign_up.html"
+
+    def get(self, request):
+        return Response({"teams": team_choices}, status=status.HTTP_200_OK)
+    
+    def post(self, request):
+        user_serializer = UserSerializer(data=request.data)
+
+        if user_serializer.is_valid():
+            user_serializer.save()
+            return redirect("login")
+            
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
 
 class HomeView(APIView):
