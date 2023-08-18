@@ -1,0 +1,26 @@
+.container {
+    background-color: rgb(243, 243, 243);
+    max-width: 350px;
+    margin: 10% auto 0 auto;
+    padding: 100px 30px;
+    border-radius: 30px;
+}
+
+.btn {
+    display: block;
+    margin: 0 auto;
+}
+
+.p-basic {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 0;
+    font-weight: 700;
+}
+
+.a-sign-inup {
+    color: rgb(240, 84, 84);
+}
+.a-sign-inup:hover {
+    color: rgb(255, 181, 181);
+}
