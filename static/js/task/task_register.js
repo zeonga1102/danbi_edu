@@ -24,22 +24,22 @@ function deleteTeamSelect(elem) {
 async function postTask() {
     csrftoken = getCookie("csrftoken")
     
-    let subtask_list = []
+    let subtaskList = []
     for(let i=1; i<=teamIdNum; i++) {
-        subtask_list.push(document.getElementById(`team_${i}`).value)
+        subtaskList.push(document.getElementById(`team_${i}`).value)
     }
 
     let taskData = {
         title: document.getElementById("title").value,
         content: document.getElementById("content").value,
-        subtask: subtask_list,
+        subtask: subtaskList,
     }
 
     const response = await fetch(`/task/register`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-            'Content-type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
+            "Content-type": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
             "X-CSRFToken": csrftoken
         },
         withCredentials: true,
@@ -53,5 +53,5 @@ async function postTask() {
             if (response.status == 400) {
                 alert(response.status)
             }
-        });
+        })
 }
