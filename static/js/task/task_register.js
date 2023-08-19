@@ -1,7 +1,8 @@
 let teamIdNum = 1
 
 function addTeamSelect() {
-    const teamSelectDiv = document.getElementById(`team_select_${teamIdNum}`)
+    const teamSelects = document.getElementsByClassName("team-select")
+    const teamSelectDiv = teamSelects[teamSelects.length - 1]
     const newDiv = teamSelectDiv.cloneNode(true)
 
     teamIdNum++
@@ -12,21 +13,22 @@ function addTeamSelect() {
 }
 
 function deleteTeamSelect(elem) {
-    if(teamIdNum <= 1) {
+    let teamSelectLength = document.getElementsByClassName("team-select").length
+    if(teamSelectLength <= 1) {
         alert("협업 팀은 1개 이상 존재해야 합니다.")
         return
     }
 
     elem.parentNode.remove()
-    teamIdNum--
 }
 
 async function postTask() {
     csrftoken = getCookie("csrftoken")
     
     let subtaskList = []
-    for(let i=1; i<=teamIdNum; i++) {
-        subtaskList.push(document.getElementById(`team_${i}`).value)
+    const formSelects = document.getElementsByClassName("form-select")
+    for(let i=0; i<formSelects.length; i++) {
+        subtaskList.push(formSelects[i].value)
     }
 
     let taskData = {
