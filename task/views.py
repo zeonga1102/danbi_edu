@@ -93,6 +93,14 @@ class TaskManageView(APIView):
             sd.team = data["editSubtask"][f"{sd.id}"]
         SubTask.objects.bulk_update(subtask_data, ["team"])
 
+        uncomplete_subtask_data = SubTask.objects.filter(task_id=data["id"], is_complete=False)
+        if uncomplete_subtask_data:
+            data["is_complete"] = False
+            data["completed_date"] = None
+        elif not task_data.is_complete:
+            data["is_complete"] = True
+            data["completed_date"] = timezone.now()
+
         task_serializer = TaskSerializer(task_data, data, partial=True)
         if task_serializer.is_valid():
             task_serializer.save()
