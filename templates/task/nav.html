@@ -11,8 +11,8 @@
 {% block content %}
     <nav class="top">
         <a href={% url "task:task_list" %}>전체 업무</a>
-        <a href={% url "task:task_list" %}>할당 업무</a>
-        <a href={% url "task:task_list" %}>내가 등록한 업무</a>
+        <a href="{% url "task:task_list" %}?filter=assigned">할당 업무</a>
+        <a href="{% url "task:task_list" %}?filter=my">내가 등록한 업무</a>
         <button onclick="go_task_register()" class="button-task-register">업무 등록</button>
         <button onclick="logout()" class="button-logout">로그아웃</button>
     </nav>
