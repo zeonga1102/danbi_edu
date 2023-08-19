@@ -100,6 +100,15 @@ class TaskManageView(APIView):
             return Response({"message": "정상"}, status=status.HTTP_200_OK)
 
         return Response(task_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request):
+        task_id = request.GET.get("task", None)
+        task = Task.objects.get(id=int(task_id))
+        if task.is_complete:
+            return Response({"message": "완료된 업무는 삭제 불가"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        task.delete()
+        return Response({"message": "정상"}, status=status.HTTP_200_OK)
 
 
 class SubTaskView(APIView):

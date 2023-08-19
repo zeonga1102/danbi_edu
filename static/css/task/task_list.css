@@ -40,10 +40,14 @@
     text-align: center;
 }
 
-.btn-edit {
-    margin-right: 5px;
-}
-
 .btn-edit:hover {
     color: rgb(0, 144, 201);
+}
+
+.btn-delete {
+    margin-left: 5px;
+}
+
+.btn-delete:hover {
+    color: rgb(211, 0, 0)
 }
