@@ -26,7 +26,7 @@ class TaskView(APIView):
         filter = request.GET.get("filter", None)
 
         if filter == "assigned":
-            task_data = Task.objects.prefetch_related("subtask_set").filter(subtask__team=user.team).order_by("-created_at")
+            task_data = Task.objects.prefetch_related("subtask_set").filter(subtask__team=user.team).distinct().order_by("-created_at")
         elif filter == "my":
             task_data = Task.objects.filter(create_user=user).order_by("-created_at")
         else:
