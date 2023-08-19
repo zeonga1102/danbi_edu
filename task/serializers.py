@@ -1,22 +1,44 @@
+from django.utils import dateformat
 from rest_framework import serializers
 
 from task.models import Task, SubTask
 
 
 class SubTaskSerializer(serializers.ModelSerializer):
-     class Meta:
+    is_task_complete = serializers.SerializerMethodField(read_only=True)
+    str_completed_date = serializers.SerializerMethodField()
+
+    def get_is_task_complete(self, obj):
+        return obj.task.is_complete
+    
+    def get_str_completed_date(self, obj):
+        if obj.completed_date:
+            return dateformat.format(obj.completed_date, "y-m-d H:i")
+        
+        return obj.completed_date
+
+    class Meta:
           model = SubTask
-          fields = ["team", "is_complete", "completed_date"]
+          fields = [
+              "id", "team", "is_complete", "completed_date", "task", 
+              "is_task_complete", "str_completed_date"
+            ]
 
 
 class TaskSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField(read_only=True)
-    subtask = serializers.ListField()
+    subtask = serializers.ListField(write_only=True)
     subtask_set = SubTaskSerializer(many=True, read_only=True)
+    str_completed_date = serializers.SerializerMethodField()
 
     def get_username(self, obj):
         return obj.create_user.username
     
+    def get_str_completed_date(self, obj):
+        if obj.completed_date:
+            return dateformat.format(obj.completed_date, "y-m-d H:i")
+        
+        return obj.completed_date
     
     def create(self, validated_data):
         subtask = validated_data.pop("subtask")
@@ -29,8 +51,8 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = ["id", "create_user", "team", "title", "content","is_complete", "complete_date", "created_at", "username", "subtask_set", "subtask"]
-
-        extra_kwargs = {
-            "subtask": {"write_only": True}
-        }
+        fields = [
+            "id", "create_user", "team", "title", "content","is_complete", 
+            "completed_date", "created_at", "username", "subtask_set", "subtask", 
+            "str_completed_date"
+        ]

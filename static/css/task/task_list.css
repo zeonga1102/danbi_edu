@@ -1,0 +1,37 @@
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 19rem);
+    justify-content: center;
+}
+
+.card {
+    margin-top: 20px;
+}
+
+.span-complete {
+    background-color: rgb(0, 201, 43);
+    color: white;
+    font-weight: 700;
+    border-radius: 20px;
+    padding: 5px;
+    margin-right: 10px;
+}
+
+.span-uncomplete {
+    background-color: rgb(255, 0, 0);
+    color: white;
+    font-weight: 700;
+    border-radius: 20px;
+    padding: 5px;
+    margin-right: 10px;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+}
+
+.span-complete-date {
+    flex-grow: 1;
+    font-weight: 700;
+}
