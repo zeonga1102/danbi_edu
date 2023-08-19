@@ -55,7 +55,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
         instance.save()
 
-        subtask = validated_data.pop("subtask")
+        subtask = validated_data.pop("subtask", [])
         for st in subtask:
             SubTask(team=st, task=instance).save()
 
