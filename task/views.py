@@ -3,15 +3,18 @@ from django.shortcuts import redirect
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, permissions
+from rest_framework import status
 
 from task.models import Task, SubTask
 from task.serializers import TaskSerializer, SubTaskSerializer
 from user.models import User
+from danbi_edu.permissions import IsAuthenticatedOrIsReadOnly
 from danbi_edu.const import team_choices
 
 
 class TaskView(APIView):
+    permission_classes = [IsAuthenticatedOrIsReadOnly]
+
     renderer_classes = [TemplateHTMLRenderer]
     template_name = "task/task_list.html"
 
@@ -35,6 +38,8 @@ class TaskView(APIView):
     
 
 class TaskRegisterView(APIView):
+    permission_classes = [IsAuthenticatedOrIsReadOnly]
+
     renderer_classes = [TemplateHTMLRenderer]
     template_name = "task/task_register.html"
 
@@ -59,6 +64,8 @@ class TaskRegisterView(APIView):
     
 
 class TaskManageView(APIView):
+    permission_classes = [IsAuthenticatedOrIsReadOnly]
+
     renderer_classes = [TemplateHTMLRenderer]
     template_name = "task/task_manage.html"
 
@@ -126,6 +133,8 @@ class TaskManageView(APIView):
 
 
 class SubTaskView(APIView):
+    permission_classes = [IsAuthenticatedOrIsReadOnly]
+
     def put(self, request):
         data = request.data.copy()
         if data["is_complete"]:
