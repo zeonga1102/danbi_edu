@@ -86,6 +86,8 @@ class TaskManageView(APIView):
         data["subtask"] = data.pop("addSubtask").values()
 
         task_data = Task.objects.get(id=data["id"])
+        if task_data.create_user != request.user:
+            return Response({"message": "권한 없음"}, status=status.HTTP_401_UNAUTHORIZED)
 
         SubTask.objects.filter(id__in=data["deleteSubtask"], is_complete=False).delete()
         subtask_data = SubTask.objects.filter(id__in=list(map(int, data["editSubtask"].keys())), is_complete=False)
@@ -112,6 +114,10 @@ class TaskManageView(APIView):
     def delete(self, request):
         task_id = request.GET.get("task", None)
         task = Task.objects.get(id=int(task_id))
+
+        if task.create_user != request.user:
+            return Response({"message": "권한 없음"}, status=status.HTTP_401_UNAUTHORIZED)
+
         if task.is_complete:
             return Response({"message": "완료된 업무는 삭제 불가"}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -132,6 +138,9 @@ class SubTaskView(APIView):
         except SubTask.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
+        if subtask_data.team != request.user.team:
+            return Response({"message": "권한 없음"}, status=status.HTTP_401_UNAUTHORIZED)
+
         subtask_serializer = SubTaskSerializer(subtask_data, data, partial=True)
 
         if subtask_serializer.is_valid():
