@@ -9,7 +9,7 @@ class Task(models.Model):
     title = models.CharField(max_length=50)
     content = models.TextField()
     is_complete = models.BooleanField(default=False)
-    complete_date = models.DateTimeField(null=True)
+    completed_date = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
