@@ -3,15 +3,7 @@
 
 {% block task_statics %}
     <script src={% static "js/task/task_register.js" %}></script>
-
-  {% if user.is_anonymous %}
-  <script>
-    alert("로그인 후 이용 가능합니다!")
-    window.location.href = "/login"
-  </script>
-  {% endif %}
-
-  <link href={% static "css/task/task_register.css" %} rel="stylesheet">
+    <link href={% static "css/task/task_register.css" %} rel="stylesheet">
 {% endblock %}
 
 {% block task_content %}
