@@ -1,4 +1,4 @@
-async function check_subtask(elem) {
+async function checkSubtask(elem) {
     csrftoken = getCookie("csrftoken")
     
     let taskData = {
@@ -25,4 +25,10 @@ async function check_subtask(elem) {
                 alert(response.status)
             }
         });
+}
+
+
+function editTask(elem) {
+    const task_id = elem.id.split("btn_edit_")[1]
+    window.location.href = `/task/manage?task=${task_id}`
 }

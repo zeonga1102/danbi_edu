@@ -1,0 +1,54 @@
+{% extends "task/nav.html" %}
+{% load static %}
+
+{% block task_statics %}
+    <script src={% static "js/task/task_manage.js" %}></script>
+    <link href={% static "css/task/task_register.css" %} rel="stylesheet">
+{% endblock %}
+
+{% block task_content %}
+<div class="container">
+  <div id="newArtistForm" class="col g-3">
+        <div class="mb-3">
+            <label for="title" class="form-label">제목</label>
+            <input type="text" class="form-control" id="title" placeholder="50글자 이하" value={{ task.title }}>
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">내용</label>
+            <textarea class="form-control" id="content" rows="5" value={{ task.content }}>{{ task.content }}</textarea>
+        </div>
+        <div class="subtask" id="subtask">
+            <span>협업 요청</span>
+            {% for st in task.subtask_set %}
+                <div class="team-select" id="team_select_{{ st.id }}">
+                    {% if st.is_complete %}
+                        <select onchange="changeTeam(this)" class="form-select" id="team_{{ st.id }}" disabled>
+                    {% else %}
+                        <select onchange="changeTeam(this)" class="form-select" id="team_{{ st.id }}">
+                    {% endif %}
+                        {% for team in teams %}
+                            {% if st.team == team.0 %}
+                                <option value={{team.0}} selected>{{team.1}}</option>
+                            {% else %}
+                                <option value={{team.0}}>{{team.1}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    {% if not st.is_complete %}
+                        <svg onclick="deleteTeamSelect(this)" class="team-delete" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-square" viewBox="0 0 16 16">
+                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <div class="col-12">
+                <button type="button" onclick="addTeamSelect()" class="btn btn-outline-dark" id="btn_add_team">팀 추가</button>
+            </div>
+        </div>
+        <div class="col-12">
+            <button type="button" onclick="putTask()" class="btn btn-primary" id="btn_post_task">수정 완료</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

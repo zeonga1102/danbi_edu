@@ -35,3 +35,15 @@
     flex-grow: 1;
     font-weight: 700;
 }
+
+.table {
+    text-align: center;
+}
+
+.btn-edit {
+    margin-right: 5px;
+}
+
+.btn-edit:hover {
+    color: rgb(0, 144, 201);
+}

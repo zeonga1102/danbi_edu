@@ -48,6 +48,18 @@ class TaskSerializer(serializers.ModelSerializer):
             SubTask(team=st, task=task).save()
         
         return validated_data
+    
+    def update(self, instance, validated_data):
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+
+        instance.save()
+
+        subtask = validated_data.pop("subtask")
+        for st in subtask:
+            SubTask(team=st, task=instance).save()
+
+        return instance
 
     class Meta:
         model = Task
