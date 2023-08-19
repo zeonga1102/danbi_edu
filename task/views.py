@@ -83,7 +83,7 @@ class TaskManageView(APIView):
     
     def put(self, request):
         data = request.data.copy()
-        data["subtask"] = data.pop("addSubtask").values()
+        data["subtask"] = data.pop("addSubtask")
 
         task_data = Task.objects.get(id=data["id"])
         if task_data.create_user != request.user:

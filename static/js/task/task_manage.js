@@ -74,7 +74,7 @@ async function putTask() {
         id: task_id,
         title: document.getElementById("title").value,
         content: document.getElementById("content").value,
-        "addSubtask": addSubtask,
+        "addSubtask": Object.values(addSubtask),
         "editSubtask": editSubtask,
         "deleteSubtask": deleteSubtask
     }
