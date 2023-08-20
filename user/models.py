@@ -5,19 +5,21 @@ from danbi_edu.const import team_choices
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, password=None):
+    def create_user(self, username, team, password=None):
         if not username:
-            raise ValueError('Users must have an username')
+            raise ValueError("Users must have an username")
         user = self.model(
             username=username,
+            team=team
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
     
-    def create_superuser(self, username, password=None):
+    def create_superuser(self, username, team, password=None):
         user = self.create_user(
             username=username,
+            team=team,
             password=password
         )
         user.is_admin = True
@@ -32,9 +34,9 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     
-    USERNAME_FIELD = 'username'
+    USERNAME_FIELD = "username"
 
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ["team"]
     
     objects = UserManager()
     
