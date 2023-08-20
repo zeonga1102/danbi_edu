@@ -78,7 +78,10 @@ class TaskManageView(APIView):
         if not task:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
-        task_data = Task.objects.get(id=task)
+        try:
+            task_data = Task.objects.get(id=task)
+        except Task.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         serialized_task_data = TaskSerializer(task_data).data
 
         return_data = {
@@ -92,23 +95,19 @@ class TaskManageView(APIView):
         data = request.data.copy()
         data["subtask"] = data.pop("addSubtask")
 
-        task_data = Task.objects.get(id=data["id"])
+        try:
+            task_data = Task.objects.get(id=data["id"])
+        except Task.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
         if task_data.create_user != request.user:
-            return Response({"message": "권한 없음"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"message": "권한 없음"}, status=status.HTTP_403_FORBIDDEN)
 
         SubTask.objects.filter(id__in=data["deleteSubtask"], is_complete=False).delete()
         subtask_data = SubTask.objects.filter(id__in=list(map(int, data["editSubtask"].keys())), is_complete=False)
         for sd in subtask_data:
             sd.team = data["editSubtask"][f"{sd.id}"]
         SubTask.objects.bulk_update(subtask_data, ["team"])
-
-        uncomplete_subtask_data = SubTask.objects.filter(task_id=data["id"], is_complete=False)
-        if uncomplete_subtask_data:
-            data["is_complete"] = False
-            data["completed_date"] = None
-        elif not task_data.is_complete:
-            data["is_complete"] = True
-            data["completed_date"] = timezone.now()
 
         task_serializer = TaskSerializer(task_data, data, partial=True)
         if task_serializer.is_valid():
@@ -123,7 +122,7 @@ class TaskManageView(APIView):
         task = Task.objects.get(id=int(task_id))
 
         if task.create_user != request.user:
-            return Response({"message": "권한 없음"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"message": "권한 없음"}, status=status.HTTP_403_FORBIDDEN)
 
         if task.is_complete:
             return Response({"message": "완료된 업무는 삭제 불가"}, status=status.HTTP_400_BAD_REQUEST)
@@ -145,10 +144,10 @@ class SubTaskView(APIView):
         try:
             subtask_data = SubTask.objects.get(id=data["subtaskId"])
         except SubTask.DoesNotExist:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_404_NOT_FOUND)
         
         if subtask_data.team != request.user.team:
-            return Response({"message": "권한 없음"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"message": "권한 없음"}, status=status.HTTP_403_FORBIDDEN)
 
         subtask_serializer = SubTaskSerializer(subtask_data, data, partial=True)
 

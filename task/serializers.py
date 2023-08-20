@@ -1,4 +1,4 @@
-from django.utils import dateformat
+from django.utils import dateformat, timezone
 from rest_framework import serializers
 
 from task.models import Task, SubTask
@@ -50,12 +50,21 @@ class TaskSerializer(serializers.ModelSerializer):
         return validated_data
     
     def update(self, instance, validated_data):
+        subtask = validated_data.pop("subtask", [])
+        uncomplete_subtask_data = SubTask.objects.filter(task=instance, is_complete=False)
+
+        if subtask:
+            validated_data["is_complete"] = False
+            validated_data["completed_date"] = None
+        elif not uncomplete_subtask_data and not instance.is_complete:
+            validated_data["is_complete"] = True
+            validated_data["completed_date"] = timezone.now()
+
         for key, value in validated_data.items():
             setattr(instance, key, value)
 
         instance.save()
 
-        subtask = validated_data.pop("subtask", [])
         for st in subtask:
             SubTask(team=st, task=instance).save()
 
