@@ -3,7 +3,7 @@ async function checkSubtask(elem) {
     
     let taskData = {
         subtaskId: elem.id.split("subtask_")[1],
-        is_complete: elem.checked
+        isComplete: elem.checked
     }
 
     const response = await fetch(`/task/subtask`, {
