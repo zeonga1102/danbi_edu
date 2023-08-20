@@ -119,7 +119,13 @@ class TaskManageView(APIView):
     
     def delete(self, request):
         task_id = request.GET.get("task", None)
-        task = Task.objects.get(id=int(task_id))
+        if not task_id:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            task = Task.objects.get(id=int(task_id))
+        except Task.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
         if task.create_user != request.user:
             return Response({"message": "권한 없음"}, status=status.HTTP_403_FORBIDDEN)
@@ -136,6 +142,8 @@ class SubTaskView(APIView):
 
     def put(self, request):
         data = request.data.copy()
+        data["is_complete"] = data.pop("isComplete")
+
         if data["is_complete"]:
             data["completed_date"] = timezone.now()
         else:
@@ -153,37 +161,6 @@ class SubTaskView(APIView):
 
         if subtask_serializer.is_valid():
             subtask_serializer.save()
-
-            task_id = subtask_serializer.data["task"]
-            is_task_complete = subtask_serializer.data["is_task_complete"]
-
-            if data["is_complete"] and not is_task_complete:
-                subtask_data = SubTask.objects.filter(task_id=task_id)
-
-                for st in subtask_data:
-                    if not st.is_complete:
-                        break
-                else:
-                    updated_data = {
-                        "is_complete": True, 
-                        "completed_date": timezone.now()
-                    }
-                    task_data = Task.objects.get(id=task_id)
-                    task_serializer = TaskSerializer(task_data, updated_data, partial=True)
-
-                    if task_serializer.is_valid():
-                        task_serializer.save()
-
-            elif not data["is_complete"] and is_task_complete:
-                updated_data = {
-                    "is_complete": False,
-                    "completed_date": None
-                }
-                task_data = Task.objects.get(id=task_id)
-                task_serializer = TaskSerializer(task_data, updated_data, partial=True)
-
-                if task_serializer.is_valid():
-                    task_serializer.save()
 
             return Response({"message": "정상"}, status=status.HTTP_200_OK)
         

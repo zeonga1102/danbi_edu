@@ -5,23 +5,51 @@ from task.models import Task, SubTask
 
 
 class SubTaskSerializer(serializers.ModelSerializer):
-    is_task_complete = serializers.SerializerMethodField(read_only=True)
     str_completed_date = serializers.SerializerMethodField()
 
-    def get_is_task_complete(self, obj):
-        return obj.task.is_complete
-    
     def get_str_completed_date(self, obj):
         if obj.completed_date:
             return dateformat.format(obj.completed_date, "y-m-d H:i")
         
         return obj.completed_date
+    
+    def update(self, instance, validated_data):
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+
+        instance.save()
+
+        if validated_data["is_complete"] and not instance.task.is_complete:
+            subtask_data = SubTask.objects.filter(task=instance.task)
+
+            for st in subtask_data:
+                if not st.is_complete:
+                    break
+            else:
+                updated_data = {
+                    "is_complete": True, 
+                    "completed_date": timezone.now()
+                }
+                task_serializer = TaskSerializer(instance.task, updated_data, partial=True)
+
+                if task_serializer.is_valid():
+                    task_serializer.save()
+        elif not validated_data["is_complete"] and instance.task.is_complete:
+            updated_data = {
+                "is_complete": False,
+                "completed_date": None
+            }
+            task_serializer = TaskSerializer(instance.task, updated_data, partial=True)
+
+            if task_serializer.is_valid():
+                task_serializer.save()
+
+        return instance
 
     class Meta:
           model = SubTask
           fields = [
-              "id", "team", "is_complete", "completed_date", "task", 
-              "is_task_complete", "str_completed_date"
+              "id", "team", "is_complete", "completed_date", "task",  "str_completed_date"
             ]
 
 
