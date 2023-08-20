@@ -2,7 +2,7 @@ async function checkSubtask(elem) {
     csrftoken = getCookie("csrftoken")
     
     let taskData = {
-        subtaskId: elem.id.split("subtask_")[1],
+        subtaskId: parseInt(elem.id.split("subtask_")[1]),
         isComplete: elem.checked
     }
 

@@ -68,7 +68,7 @@ async function putTask() {
     csrftoken = getCookie("csrftoken")
 
     urlSearch = new URLSearchParams(location.search)
-    task_id = urlSearch.get("task")
+    task_id = parseInt(urlSearch.get("task"))
 
     let taskData = {
         id: task_id,
