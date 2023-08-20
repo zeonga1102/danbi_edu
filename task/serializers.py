@@ -72,8 +72,8 @@ class TaskSerializer(serializers.ModelSerializer):
         subtask = validated_data.pop("subtask")
         task = Task.objects.create(**validated_data)
 
-        for st in subtask:
-            SubTask(team=st, task=task).save()
+        SubTask.objects.bulk_create([SubTask(team=st, task=task) for st in subtask])
+
         
         return validated_data
     
@@ -93,8 +93,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
         instance.save()
 
-        for st in subtask:
-            SubTask(team=st, task=instance).save()
+        SubTask.objects.bulk_create([SubTask(team=st, task=instance) for st in subtask])
 
         return instance
 

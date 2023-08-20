@@ -26,11 +26,11 @@ class TaskView(APIView):
         filter = request.GET.get("filter", None)
 
         if filter == "assigned":
-            task_data = Task.objects.prefetch_related("subtask_set").filter(subtask__team=user.team).distinct().order_by("-created_at")
+            task_data = Task.objects.filter(subtask__team=user.team).prefetch_related("subtask_set").select_related("create_user").distinct().order_by("-created_at")
         elif filter == "my":
-            task_data = Task.objects.filter(create_user=user).order_by("-created_at")
+            task_data = Task.objects.filter(create_user=user).select_related("create_user").prefetch_related("subtask_set").order_by("-created_at")
         else:
-            task_data = Task.objects.all().order_by("-created_at")
+            task_data = Task.objects.all().select_related("create_user").prefetch_related("subtask_set").order_by("-created_at")
         
         serialized_task_data = TaskSerializer(task_data, many=True).data
 
@@ -78,11 +78,11 @@ class TaskManageView(APIView):
         if not task:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
-        try:
-            task_data = Task.objects.get(id=task)
-        except Task.DoesNotExist:
+        task_data = Task.objects.filter(id=task).select_related("create_user").prefetch_related("subtask_set")
+        if not task_data:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        serialized_task_data = TaskSerializer(task_data).data
+
+        serialized_task_data = TaskSerializer(task_data.first()).data
 
         return_data = {
             "teams": team_choices,
@@ -95,10 +95,11 @@ class TaskManageView(APIView):
         data = request.data.copy()
         data["subtask"] = data.pop("addSubtask")
 
-        try:
-            task_data = Task.objects.get(id=data["id"])
-        except Task.DoesNotExist:
+        task_data = Task.objects.filter(id=data["id"]).select_related("create_user").prefetch_related("subtask_set")
+        if not task_data:
             return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        task_data = task_data.first()
         
         if task_data.create_user != request.user:
             return Response({"message": "권한 없음"}, status=status.HTTP_403_FORBIDDEN)
@@ -122,10 +123,11 @@ class TaskManageView(APIView):
         if not task_id:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            task = Task.objects.get(id=int(task_id))
-        except Task.DoesNotExist:
+        task = Task.objects.filter(id=int(task_id)).select_related("create_user").prefetch_related("subtask_set")
+        if not task:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+        task = task.first()
 
         if task.create_user != request.user:
             return Response({"message": "권한 없음"}, status=status.HTTP_403_FORBIDDEN)
