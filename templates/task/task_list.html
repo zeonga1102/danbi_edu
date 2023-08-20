@@ -50,15 +50,15 @@
                                 <td>
                                     {% if user.team == st.team %}
                                         {% if st.is_complete %}
-                                            <input id="subtask_{{st.id}}" onclick="checkSubtask(this)" class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked>
+                                            <input id="subtask_{{st.id}}" onclick="checkSubtask(this)" class="form-check-input" type="checkbox" checked>
                                         {% else %}
-                                            <input id="subtask_{{st.id}}" onclick="checkSubtask(this)" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                            <input id="subtask_{{st.id}}" onclick="checkSubtask(this)" class="form-check-input" type="checkbox">
                                     {% endif %}
                                     {% else %}
                                         {% if st.is_complete %}
-                                            <input id="subtask_{{st.id}}" class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminateDisabled" checked disabled>
+                                            <input id="subtask_{{st.id}}" class="form-check-input" type="checkbox" checked disabled>
                                         {% else %}
-                                            <input id="subtask_{{st.id}}" class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminateDisabled" disabled>
+                                            <input id="subtask_{{st.id}}" class="form-check-input" type="checkbox" disabled>
                                         {% endif %}
                                     {% endif %}
                                 </td>
